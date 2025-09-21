@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sikkim Travel Guide</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+
+        .slide-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 1.5rem;
+        }
+
+        .slide {
+            min-width: 100%;
+            transition: transform 0.5s ease-in-out;
+            border-radius: 1.5rem;
+            object-fit: cover;
+            height: 400px;
+        }
+
+        .slides {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .chat-box {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #e5e7eb;
+            background-color: #fff;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .chat-message {
+            max-width: 80%;
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            word-wrap: break-word;
+        }
+
+        .message-me {
+            background-color: #d1fae5;
+            align-self: flex-end;
+            border-bottom-right-radius: 0;
+        }
+
+        .message-other {
+            background-color: #e5e7eb;
+            align-self: flex-start;
+            border-bottom-left-radius: 0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fade-in-element {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #6366f1;
+            animation: spin 1s ease infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <!-- Main Container -->
+    <div id="app-container" class="bg-white p-8 rounded-3xl shadow-2xl max-w-4xl w-full">
+
+        <!-- Loading Spinner -->
+        <div id="loading-spinner" class="flex flex-col items-center justify-center h-full w-full absolute inset-0 z-50 bg-white/70 backdrop-blur-sm hidden">
+            <div class="spinner"></div>
+            <p class="mt-4 text-lg font-semibold text-gray-700">Loading...</p>
+        </div>
+
+        <!-- Home Page -->
+        <section id="home-page" class="fade-in-element">
+            <header class="flex justify-between items-center mb-6">
+                <h1 class="text-3xl font-bold text-gray-800">Sikkim Tour</h1>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-indigo-600 hover:text-indigo-800 font-medium transition-colors">Login</a>
+                    <a href="#" class="text-indigo-600 hover:text-indigo-800 font-medium transition-colors">Register</a>
+                </div>
+            </header>
+
+            <!-- Image Slider -->
+            <div class="slide-container shadow-xl">
+                <div class="slides" id="image-slider">
+                    <img src="hanuman.jpg" alt="Hanuman Tok" class="slide">
+                    <img src="guru.jpg" alt="Gurudongmar Lake" class="slide">
+                    <img src="tsomgo.jpg" alt="Tsomgo Chho" class="slide">
+                    <img src="nathulapass.jpg" alt="Nathula Pass" class="slide">
+                    <img src="gangtok.jpg" alt="Gangtok" class="slide">
+                </div>
+            </div>
+            <div class="flex justify-center mt-4 space-x-2">
+                <button class="w-2 h-2 rounded-full bg-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors" onclick="goToSlide(0)"></button>
+                <button class="w-2 h-2 rounded-full bg-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors" onclick="goToSlide(1)"></button>
+                <button class="w-2 h-2 rounded-full bg-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors" onclick="goToSlide(2)"></button>
+                <button class="w-2 h-2 rounded-full bg-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors" onclick="goToSlide(3)"></button>
+                <button class="w-2 h-2 rounded-full bg-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors" onclick="goToSlide(4)"></button>
+            </div>
+
+            <button onclick="showPage('places-page')" class="mt-8 w-full py-4 px-6 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold rounded-full shadow-lg hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Explore Places
+            </button>
+        </section>
+
+        <!-- Places List Page -->
+        <section id="places-page" class="hidden fade-in-element">
+            <button onclick="showPage('home-page')" class="mb-4 text-gray-600 hover:text-gray-800 transition-colors">
+                <i class="fas fa-arrow-left mr-2"></i>Back
+            </button>
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">Choose Your Destination</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Place Cards -->
+                <div onclick="showPlace('Rumtek Dharma Chakra Centre')" class="bg-gray-50 p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow cursor-pointer">
+                    <h3 class="text-lg font-semibold text-gray-700">Rumtek Dharma Chakra Centre</h3>
+                    <p class="text-sm text-gray-500 mt-1">A beautiful monastery with stunning architecture.</p>
+                </div>
+                <div onclick="showPlace('Gangtok')" class="bg-gray-50 p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow cursor-pointer">
+                    <h3 class="text-lg font-semibold text-gray-700">Gangtok</h3>
+                    <p class="text-sm text-gray-500 mt-1">The capital city of Sikkim, a bustling hub.</p>
+                </div>
+                <div onclick="showPlace('Nathula')" class="bg-gray-50 p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow cursor-pointer">
+                    <h3 class="text-lg font-semibold text-gray-700">Nathula</h3>
+                    <p class="text-sm text-gray-500 mt-1">A high-altitude mountain pass on the Indo-China border.</p>
+                </div>
+                <div onclick="showPlace('Gurudongmar Lake')" class="bg-gray-50 p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow cursor-pointer">
+                    <h3 class="text-lg font-semibold text-gray-700">Gurudongmar Lake</h3>
+                    <p class="text-sm text-gray-500 mt-1">One of the highest lakes in the world, sacred to Buddhists.</p>
+                </div>
+                <div onclick="showPlace('Tsomgo Chho')" class="bg-gray-50 p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow cursor-pointer">
+                    <h3 class="text-lg font-semibold text-gray-700">Tsomgo Chho</h3>
+                    <p class="text-sm text-gray-500 mt-1">A glacial lake, also known as Changu Lake.</p>
+                </div>
+                <div onclick="showPlace('Hanuman Tok')" class="bg-gray-50 p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow cursor-pointer">
+                    <h3 class="text-lg font-semibold text-gray-700">Hanuman Tok</h3>
+                    <p class="text-sm text-gray-500 mt-1">A serene temple dedicated to Lord Hanuman.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Place Details Page (Dynamic) -->
+        <section id="place-detail-page" class="hidden fade-in-element">
+            <button onclick="showPage('places-page')" class="mb-4 text-gray-600 hover:text-gray-800 transition-colors">
+                <i class="fas fa-arrow-left mr-2"></i>Back to Places
+            </button>
+            <div id="place-content">
+                <!-- Content will be dynamically populated here -->
+                <!-- Place Name -->
+                <h2 id="place-name" class="text-3xl font-bold text-gray-800 mb-4"></h2>
+                
+                <!-- Seasonal Alert -->
+                <div class="bg-blue-100 p-6 rounded-xl shadow-inner mb-6">
+                    <h3 class="text-lg font-semibold text-blue-800 mb-2">Seasonal Alert</h3>
+                    <p id="current-alert" class="text-blue-700 mb-4 italic"></p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <select id="alert-select" class="flex-1 p-2 rounded-lg border border-blue-300 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                            <option value="">Select an alert</option>
+                            <option value="Snowfall expected">Snowfall expected</option>
+                            <option value="Heavy rainfall, landslides possible">Heavy rainfall, landslides possible</option>
+                            <option value="Clear skies, ideal for sightseeing">Clear skies, ideal for sightseeing</option>
+                            <option value="Mild weather, pleasant for travel">Mild weather, pleasant for travel</option>
+                        </select>
+                        <button onclick="updateSeasonalAlert()" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors">Update Alert</button>
+                    </div>
+                </div>
+
+                <!-- Itinerary Plan -->
+                <div class="bg-gray-50 p-6 rounded-xl shadow-md mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Itinerary Plan</h3>
+                    <ul id="itinerary-list" class="list-disc list-inside text-gray-700 space-y-2"></ul>
+                </div>
+
+                <!-- Accommodation Booking -->
+                <div class="bg-green-100 p-6 rounded-xl shadow-md mb-6">
+                    <h3 class="text-lg font-semibold text-green-800 mb-4">Book Accommodation</h3>
+                    <p class="text-green-700 mb-4">Find and book hotels, homestays, or resorts nearby.</p>
+                    <button class="bg-green-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-green-700 transition-colors">
+                        <i class="fas fa-bed mr-2"></i>Search Hotels
+                    </button>
+                </div>
+
+                <!-- Vehicle Rental -->
+                <div class="bg-yellow-100 p-6 rounded-xl shadow-md mb-6">
+                    <h3 class="text-lg font-semibold text-yellow-800 mb-4">Vehicle Rental</h3>
+                    <p class="text-yellow-700 mb-4">Rent a car, jeep, or bike for your local travel needs.</p>
+                    <button class="bg-yellow-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-yellow-700 transition-colors">
+                        <i class="fas fa-car mr-2"></i>Rent a Vehicle
+                    </button>
+                </div>
+
+                <!-- Medical Services -->
+                <div class="bg-red-100 p-6 rounded-xl shadow-md mb-6">
+                    <h3 class="text-lg font-semibold text-red-800 mb-4">Medical Services</h3>
+                    <p class="text-red-700 mb-4">Locate nearby clinics, hospitals, or pharmacies in case of an emergency.</p>
+                    <button class="bg-red-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-red-700 transition-colors">
+                        <i class="fas fa-first-aid mr-2"></i>Find Medical Help
+                    </button>
+                </div>
+
+                <!-- Chatbox -->
+                <div class="bg-gray-50 p-6 rounded-xl shadow-md">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Chat with Fellow Travelers</h3>
+                    <p class="text-sm text-gray-500 mb-4">Your user ID: <span id="user-id-display" class="font-mono text-gray-600"></span></p>
+                    <div id="chat-messages" class="chat-box">
+                        <!-- Chat messages will be populated here -->
+                    </div>
+                    <div class="mt-4 flex gap-4">
+                        <input type="text" id="chat-input" class="flex-1 p-3 rounded-xl border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" placeholder="Type your message...">
+                        <button onclick="sendMessage()" class="bg-indigo-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-indigo-700 transition-colors">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, addDoc, setDoc, updateDoc, onSnapshot, collection, query, orderBy, serverTimestamp, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global variables provided by the environment
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        
+        // UI State
+        let currentPage = 'home-page';
+        let currentPlace = '';
+        const placesData = {
+            'Rumtek Dharma Chakra Centre': {
+                description: "The Rumtek Dharma Chakra Centre is one of the most significant and largest monasteries in Sikkim. It is the seat of the Karmapa, the head of the Kagyu lineage of Tibetan Buddhism. The monastery is a stunning example of Tibetan architecture and offers a serene and spiritual experience.",
+                itinerary: [
+                    "Morning: Visit the main monastery and attend the prayers.",
+                    "Afternoon: Explore the Golden Stupa and the Nalanda Institute.",
+                    "Evening: Enjoy the peaceful surroundings and panoramic views of Gangtok."
+                ]
+            },
+            'Gangtok': {
+                description: "Gangtok, the capital of Sikkim, is a vibrant and bustling city nestled in the Himalayas. It serves as the gateway to the rest of the state and offers a mix of urban charm and natural beauty. Explore its bustling markets, beautiful viewpoints, and cultural centers.",
+                itinerary: [
+                    "Morning: Visit Ganesh Tok and Tashi Viewpoint for sunrise.",
+                    "Afternoon: Explore the MG Marg for shopping and local food.",
+                    "Evening: Take a ride on the Gangtok Ropeway for city views."
+                ]
+            },
+            'Nathula': {
+                description: "Nathula Pass is a high-altitude mountain pass on the Old Silk Route, connecting Sikkim to Tibet. It stands at an elevation of 14,140 feet and offers breathtaking views of the rugged Himalayan terrain. It is a strategically important location and a popular tourist destination.",
+                itinerary: [
+                    "Morning: Drive to Nathula Pass (permit required).",
+                    "Afternoon: Spend time at the pass, visit the border gates.",
+                    "Evening: Return to Gangtok, stopping at Baba Harbhajan Singh Temple."
+                ]
+            },
+            'Gurudongmar Lake': {
+                description: "Gurudongmar Lake is one of the highest lakes in the world, situated at an altitude of 17,800 feet. It is considered sacred by Buddhists, Sikhs, and Hindus. The stunning turquoise water and the surrounding snow-capped mountains create an unforgettable landscape.",
+                itinerary: [
+                    "Day 1: Drive from Lachen to Gurudongmar Lake.",
+                    "Day 2: Explore the lake, visit the nearby sarovars.",
+                    "Day 3: Return to Gangtok."
+                ]
+            },
+            'Tsomgo Chho': {
+                description: "Tsomgo Chho, also known as Changu Lake, is a glacial lake located at an altitude of 12,310 feet. The lake's surface reflects the surrounding snow-capped mountains and changes colors with the seasons. It is a popular spot for yak rides and photography.",
+                itinerary: [
+                    "Morning: Drive from Gangtok to Tsomgo Chho.",
+                    "Afternoon: Enjoy a yak ride, visit the temple.",
+                    "Evening: Return to Gangtok, stopping at Baba Mandir."
+                ]
+            },
+            'Hanuman Tok': {
+                description: "Hanuman Tok is a revered Hindu temple dedicated to Lord Hanuman, situated at an altitude of 7,200 feet. The temple offers a peaceful atmosphere and panoramic views of the Kanchenjunga mountain range and the lush valleys below. It is maintained by the Indian Army.",
+                itinerary: [
+                    "Morning: Visit Hanuman Tok for blessings and views.",
+                    "Afternoon: Explore the surrounding area and enjoy a picnic.",
+                    "Evening: Head back to Gangtok."
+                ]
+            }
+        };
+
+        // Firebase Auth & Firestore
+        let app, auth, db, userId;
+        let unsubscribeAlert, unsubscribeChat;
+
+        // Initialize Firebase
+        function initializeFirebase() {
+            if (!firebaseConfig) {
+                console.error("Firebase config is not available. Firestore will not function.");
+                document.getElementById('loading-spinner').classList.add('hidden');
+                return;
+            }
+            try {
+                setLogLevel('debug');
+                app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+                
+                onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        console.log("User authenticated with UID:", userId);
+                        document.getElementById('user-id-display').textContent = userId;
+                        document.getElementById('loading-spinner').classList.add('hidden');
+                    } else {
+                        console.log("No user signed in. Attempting to sign in anonymously.");
+                        try {
+                            if (initialAuthToken) {
+                                await signInWithCustomToken(auth, initialAuthToken);
+                            } else {
+                                await signInAnonymously(auth);
+                            }
+                        } catch (error) {
+                            console.error("Authentication failed:", error);
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error("Error initializing Firebase:", error);
+                document.getElementById('loading-spinner').classList.add('hidden');
+            }
+        }
+
+        // --- UI Navigation and Display Functions ---
+        // Expose functions to the global scope for HTML onclick attributes
+        window.showPage = function(pageId) {
+            document.getElementById(currentPage).classList.add('hidden');
+            document.getElementById(pageId).classList.remove('hidden');
+            document.getElementById(pageId).classList.add('fade-in-element');
+            currentPage = pageId;
+        }
+
+        window.showPlace = function(placeName) {
+            currentPlace = placeName;
+            const content = placesData[placeName];
+            if (content) {
+                // Populate the dynamic content
+                document.getElementById('place-name').textContent = placeName;
+                document.getElementById('itinerary-list').innerHTML = '';
+                content.itinerary.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = item;
+                    document.getElementById('itinerary-list').appendChild(li);
+                });
+
+                // Set up Firestore listeners
+                setupFirestoreListeners(placeName);
+                showPage('place-detail-page');
+            }
+        }
+
+        // --- Image Slider Logic ---
+        let slideIndex = 0;
+        const slidesContainer = document.getElementById('image-slider');
+        const slides = slidesContainer.querySelectorAll('.slide');
+        let slideInterval;
+
+        window.updateSlide = function() {
+            slidesContainer.style.transform = `translateX(${-slideIndex * 100}%)`;
+        }
+
+        window.goToSlide = function(index) {
+            slideIndex = index;
+            updateSlide();
+            clearInterval(slideInterval);
+            slideInterval = setInterval(nextSlide, 5000);
+        }
+
+        function nextSlide() {
+            slideIndex = (slideIndex + 1) % slides.length;
+            updateSlide();
+        }
+
+        // --- Firestore Realtime Listeners ---
+        function setupFirestoreListeners(placeName) {
+            // Unsubscribe from previous listeners
+            if (unsubscribeAlert) unsubscribeAlert();
+            if (unsubscribeChat) unsubscribeChat();
+
+            if (!db) return; // Exit if Firebase is not initialized
+
+            const placeDocRef = doc(db, `artifacts/${appId}/public/data/places`, placeName);
+            const chatCollectionRef = collection(db, `artifacts/${appId}/public/data/places/${placeName}/chat`);
+
+            // Listen for seasonal alert updates
+            unsubscribeAlert = onSnapshot(placeDocRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    const alertText = data.alert || 'No seasonal alert available.';
+                    document.getElementById('current-alert').textContent = alertText;
+                } else {
+                    document.getElementById('current-alert').textContent = 'No seasonal alert available.';
+                }
+            }, (error) => {
+                console.error("Error fetching alert:", error);
+            });
+
+            // Listen for chat messages
+            const chatQuery = query(chatCollectionRef, orderBy('timestamp', 'asc'));
+            unsubscribeChat = onSnapshot(chatQuery, (querySnapshot) => {
+                const chatMessagesDiv = document.getElementById('chat-messages');
+                chatMessagesDiv.innerHTML = '';
+                querySnapshot.forEach((doc) => {
+                    const msgData = doc.data();
+                    const messageDiv = document.createElement('div');
+                    const isMyMessage = msgData.userId === userId;
+                    messageDiv.classList.add('chat-message', isMyMessage ? 'message-me' : 'message-other');
+                    messageDiv.innerHTML = `<span class="font-bold text-sm">${isMyMessage ? 'Me' : 'User'}</span>: ${msgData.text}`;
+                    chatMessagesDiv.appendChild(messageDiv);
+                });
+                chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight; // Auto-scroll
+            }, (error) => {
+                console.error("Error fetching chat messages:", error);
+            });
+        }
+
+        // --- Firestore Interaction Functions ---
+        window.updateSeasonalAlert = async function() {
+            if (!db || !userId || !currentPlace) return;
+            const select = document.getElementById('alert-select');
+            const newAlert = select.value;
+            if (!newAlert) return;
+
+            try {
+                const placeDocRef = doc(db, `artifacts/${appId}/public/data/places`, currentPlace);
+                await setDoc(placeDocRef, { alert: newAlert, lastUpdatedBy: userId, timestamp: serverTimestamp() }, { merge: true });
+                console.log("Seasonal alert updated successfully.");
+            } catch (error) {
+                console.error("Error updating seasonal alert:", error);
+            }
+        }
+
+        window.sendMessage = async function() {
+            if (!db || !userId || !currentPlace) return;
+            const chatInput = document.getElementById('chat-input');
+            const messageText = chatInput.value.trim();
+            if (!messageText) return;
+
+            try {
+                const chatCollectionRef = collection(db, `artifacts/${appId}/public/data/places/${currentPlace}/chat`);
+                await addDoc(chatCollectionRef, {
+                    userId: userId,
+                    text: messageText,
+                    timestamp: serverTimestamp()
+                });
+                chatInput.value = ''; // Clear input field
+            } catch (error) {
+                console.error("Error sending message:", error);
+            }
+        }
+
+        // --- Event Listeners ---
+        window.onload = function() {
+            document.getElementById('loading-spinner').classList.remove('hidden');
+            initializeFirebase();
+            slideInterval = setInterval(nextSlide, 5000); // Start image slider
+            const chatInput = document.getElementById('chat-input');
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+        }
+    </script>
+</body>
+</html>
