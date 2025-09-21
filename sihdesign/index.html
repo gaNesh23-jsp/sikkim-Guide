@@ -234,6 +234,15 @@
                     </button>
                 </div>
 
+                <!-- 360 Degree View -->
+                <div class="bg-indigo-100 p-6 rounded-xl shadow-md mb-6">
+                    <h3 class="text-lg font-semibold text-indigo-800 mb-4">360° View</h3>
+                    <p class="text-indigo-700 mb-4">Explore the location with an immersive panoramic view.</p>
+                    <button id="view-360-btn" class="bg-indigo-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-indigo-700 transition-colors">
+                        <i class="fas fa-vr-cardboard mr-2"></i>View 360°
+                    </button>
+                </div>
+
                 <!-- Chatbox -->
                 <div class="bg-gray-50 p-6 rounded-xl shadow-md">
                     <h3 class="text-lg font-semibold text-gray-800 mb-4">Chat with Fellow Travelers</h3>
@@ -274,7 +283,8 @@
                     "Morning: Visit the main monastery and attend the prayers.",
                     "Afternoon: Explore the Golden Stupa and the Nalanda Institute.",
                     "Evening: Enjoy the peaceful surroundings and panoramic views of Gangtok."
-                ]
+                ],
+                view360Url: "https://www.360cities.net/image/steps-leading-to-the-water-at-toorji-ka-jhalra-jodhpur-india#81.70,-11.90,75.0"
             },
             'Gangtok': {
                 description: "Gangtok, the capital of Sikkim, is a vibrant and bustling city nestled in the Himalayas. It serves as the gateway to the rest of the state and offers a mix of urban charm and natural beauty. Explore its bustling markets, beautiful viewpoints, and cultural centers.",
@@ -282,7 +292,8 @@
                     "Morning: Visit Ganesh Tok and Tashi Viewpoint for sunrise.",
                     "Afternoon: Explore the MG Marg for shopping and local food.",
                     "Evening: Take a ride on the Gangtok Ropeway for city views."
-                ]
+                ],
+                view360Url: "https://www.360cities.net/search/sikkim"
             },
             'Nathula': {
                 description: "Nathula Pass is a high-altitude mountain pass on the Old Silk Route, connecting Sikkim to Tibet. It stands at an elevation of 14,140 feet and offers breathtaking views of the rugged Himalayan terrain. It is a strategically important location and a popular tourist destination.",
@@ -290,7 +301,8 @@
                     "Morning: Drive to Nathula Pass (permit required).",
                     "Afternoon: Spend time at the pass, visit the border gates.",
                     "Evening: Return to Gangtok, stopping at Baba Harbhajan Singh Temple."
-                ]
+                ],
+                view360Url: "https://www.360cities.net/search/sikkim"
             },
             'Gurudongmar Lake': {
                 description: "Gurudongmar Lake is one of the highest lakes in the world, situated at an altitude of 17,800 feet. It is considered sacred by Buddhists, Sikhs, and Hindus. The stunning turquoise water and the surrounding snow-capped mountains create an unforgettable landscape.",
@@ -298,7 +310,8 @@
                     "Day 1: Drive from Lachen to Gurudongmar Lake.",
                     "Day 2: Explore the lake, visit the nearby sarovars.",
                     "Day 3: Return to Gangtok."
-                ]
+                ],
+                view360Url: "https://www.360cities.net/search/sikkim"
             },
             'Tsomgo Chho': {
                 description: "Tsomgo Chho, also known as Changu Lake, is a glacial lake located at an altitude of 12,310 feet. The lake's surface reflects the surrounding snow-capped mountains and changes colors with the seasons. It is a popular spot for yak rides and photography.",
@@ -306,7 +319,8 @@
                     "Morning: Drive from Gangtok to Tsomgo Chho.",
                     "Afternoon: Enjoy a yak ride, visit the temple.",
                     "Evening: Return to Gangtok, stopping at Baba Mandir."
-                ]
+                ],
+                view360Url: "https://www.360cities.net/search/sikkim"
             },
             'Hanuman Tok': {
                 description: "Hanuman Tok is a revered Hindu temple dedicated to Lord Hanuman, situated at an altitude of 7,200 feet. The temple offers a peaceful atmosphere and panoramic views of the Kanchenjunga mountain range and the lush valleys below. It is maintained by the Indian Army.",
@@ -314,7 +328,8 @@
                     "Morning: Visit Hanuman Tok for blessings and views.",
                     "Afternoon: Explore the surrounding area and enjoy a picnic.",
                     "Evening: Head back to Gangtok."
-                ]
+                ],
+                view360Url: "https://www.360cities.net/search/sikkim"
             }
         };
 
@@ -381,6 +396,10 @@
                     li.textContent = item;
                     document.getElementById('itinerary-list').appendChild(li);
                 });
+                
+                // Set the 360-degree view button link dynamically
+                const view360Btn = document.getElementById('view-360-btn');
+                view360Btn.onclick = () => window.open(content.view360Url, '_blank');
 
                 // Set up Firestore listeners
                 setupFirestoreListeners(placeName);
